@@ -24,7 +24,7 @@ def print_names(card_names):
   for card_name in card_names:
     print(card_name)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Process JSON lists from scryfall.')
   parser.add_argument('json_file_name', metavar='JSON', type=str,
                       help='JSON file to be converted')
