@@ -2,27 +2,21 @@ import json
 import argparse
 
 def parse_json(json_file_name:str):
-  with open(args.json_file_name) as json_file:
-    scry_json = json_file.read()
-    scry = json.loads(scry_json)
-  
-  return scry
-
-def json_list_to_names(scry):
-  card_names = []
+  cards = []
 
   with open(args.json_file_name) as json_file:
     scry_json = json_file.read()
     scry = json.loads(scry_json)
 
-    for card in scry["data"]:
-      card_names.append(card["name"])
+  for card in scry["data"]:
+    cards.append(card)
   
-  return card_names
+  return cards
 
-def print_names(card_names):
-  for card_name in card_names:
-    print(card_name)
+def print_cards(cards, print_name=True):
+  for card in cards:
+    if print_name:
+      print(card["name"])
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Process JSON lists from scryfall.')
@@ -34,13 +28,15 @@ if __name__ == "__main__":
                       help='print names',
                       action="store_true")
   args = parser.parse_args()
+
+  if (args.json_file_name is not None) and (args.scry_query is not None):
+    raise RuntimeError("Invalid parameters")
   
   if args.json_file_name is not None:
-    scry = parse_json(args.json_file_name)
+    cards = parse_json(args.json_file_name)
   
   if args.scry_query is not None:
-    scry = get_cards(args.scry_query)
+    cards = get_cards(args.scry_query)
 
   if args.print_names:
-    card_names = json_list_to_names(scry)
-    print_names(card_names)
+    print_cards(cards)
