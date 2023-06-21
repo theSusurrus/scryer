@@ -20,16 +20,23 @@ def parse_json_file(json_file_name:str):
   return parse_json(json_text)
 
 def query_scryfall(scry_query:str):
-  json_text = urllib.request.urlopen(f"https://api.scryfall.com/cards/search?q={scry_query}").read()
+  sanitized_query = urllib.parse.quote(scry_query, safe='/', encoding=None, errors=None)
+  scry_http_get = f"https://api.scryfall.com/cards/search?q={sanitized_query}"
+  json_text = urllib.request.urlopen(scry_http_get).read()
 
   return parse_json(json_text)
 
-def print_cards(cards, name=True, color=False):
+def print_cards(cards, name=True, color=False, oracle=False):
   for card in cards:
-    if color:
-      print(''.join(card["color_identity"]), end=' ')
     if name:
       print(card["name"], end=' ')
+    if color:
+      print(f"color:{''.join(card['color_identity'])}", end=' ')
+    if oracle:
+      try:
+        print(f"oracle:\"{card['oracle_text']}\"", end='')
+      except KeyError:
+        pass
     print()
 
 if __name__ == "__main__":
@@ -38,11 +45,14 @@ if __name__ == "__main__":
                       help='JSON file to be converted')
   parser.add_argument('-q', dest="scry_query",
                       help='scryfall query')
-  parser.add_argument('--names', dest="print_names",
+  parser.add_argument('--no-names', dest="print_no_names",
                       help='print names',
                       action="store_true")
   parser.add_argument('--colors', dest="print_colors",
                       help='print colors',
+                      action="store_true")
+  parser.add_argument('--oracle', dest="print_oracle",
+                      help='print oracle text',
                       action="store_true")
   args = parser.parse_args()
 
@@ -55,4 +65,7 @@ if __name__ == "__main__":
   if args.scry_query is not None:
     cards = query_scryfall(args.scry_query)
 
-  print_cards(cards, name=args.print_names, color=args.print_colors)
+  print_cards(cards,
+              name=(not args.print_no_names),
+              color=args.print_colors,
+              oracle=args.print_oracle)
