@@ -1,22 +1,36 @@
+#!/usr/bin/python3
+
 import json
 import argparse
+import urllib.request
 
-def parse_json(json_file_name:str):
+def parse_json(json_text:str):
+  json_object = json.loads(json_text)
+
   cards = []
-
-  with open(args.json_file_name) as json_file:
-    scry_json = json_file.read()
-    scry = json.loads(scry_json)
-
-  for card in scry["data"]:
+  for card in json_object["data"]:
     cards.append(card)
   
   return cards
 
-def print_cards(cards, print_name=True):
+def parse_json_file(json_file_name:str):
+  with open(args.json_file_name) as json_file:
+    json_text = json_file.read()
+  
+  return parse_json(json_text)
+
+def query_scryfall(scry_query:str):
+  json_text = urllib.request.urlopen(f"https://api.scryfall.com/cards/search?q={scry_query}").read()
+
+  return parse_json(json_text)
+
+def print_cards(cards, name=True, color=False):
   for card in cards:
-    if print_name:
-      print(card["name"])
+    if color:
+      print(''.join(card["color_identity"]), end=' ')
+    if name:
+      print(card["name"], end=' ')
+    print()
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Process JSON lists from scryfall.')
@@ -27,16 +41,18 @@ if __name__ == "__main__":
   parser.add_argument('--names', dest="print_names",
                       help='print names',
                       action="store_true")
+  parser.add_argument('--colors', dest="print_colors",
+                      help='print colors',
+                      action="store_true")
   args = parser.parse_args()
 
   if (args.json_file_name is not None) and (args.scry_query is not None):
     raise RuntimeError("Invalid parameters")
   
   if args.json_file_name is not None:
-    cards = parse_json(args.json_file_name)
+    cards = parse_json_file(args.json_file_name)
   
   if args.scry_query is not None:
-    cards = get_cards(args.scry_query)
+    cards = query_scryfall(args.scry_query)
 
-  if args.print_names:
-    print_cards(cards)
+  print_cards(cards, name=args.print_names, color=args.print_colors)
