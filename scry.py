@@ -34,7 +34,7 @@ def print_cards(cards, name=True, color=False, oracle=False):
       print(f"color:{''.join(card['color_identity'])}", end=' ')
     if oracle:
       try:
-        print(f"oracle:\"{card['oracle_text']}\"", end='')
+        print(f"\n{card['oracle_text']}")
       except KeyError:
         pass
     print()
