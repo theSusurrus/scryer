@@ -26,12 +26,17 @@ def query_scryfall(scry_query:str):
 
   return parse_json(json_text)
 
-def print_cards(cards, name=True, color=False, oracle=False):
+def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
   for card in cards:
     if name:
       print(card["name"], end=' ')
+    if mana_cost:
+      try:
+        print(card["mana_cost"], end=' ')
+      except KeyError:
+        pass
     if color:
-      print(f"color:{''.join(card['color_identity'])}", end=' ')
+      print(f"id:{''.join(card['color_identity'])}", end=' ')
     if oracle:
       try:
         print(f"\n{card['oracle_text']}")
@@ -54,6 +59,9 @@ if __name__ == "__main__":
   parser.add_argument('--oracle', dest="print_oracle",
                       help='print oracle text',
                       action="store_true")
+  parser.add_argument('--mana_cost', dest="print_mana_cost",
+                      help='print oracle text',
+                      action="store_true")
   args = parser.parse_args()
 
   if (args.json_file_name is not None) and (args.scry_query is not None):
@@ -68,4 +76,5 @@ if __name__ == "__main__":
   print_cards(cards,
               name=(not args.print_no_names),
               color=args.print_colors,
-              oracle=args.print_oracle)
+              oracle=args.print_oracle,
+              mana_cost=args.print_mana_cost)
