@@ -24,6 +24,8 @@ def query_scryfall(scry_query:str):
   scry_http_get = f"https://api.scryfall.com/cards/search?q={sanitized_query}"
   json_text = urllib.request.urlopen(scry_http_get).read()
 
+  #todo: add pagination support
+
   return parse_json(json_text)
 
 def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
