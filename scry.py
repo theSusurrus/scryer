@@ -26,16 +26,21 @@ def print_names(card_names):
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Process JSON lists from scryfall.')
-  parser.add_argument('json_file_name', metavar='JSON', type=str,
+  parser.add_argument('-j', dest="json_file_name",
                       help='JSON file to be converted')
+  parser.add_argument('-q', dest="scry_query",
+                      help='scryfall query')
   parser.add_argument('--names', dest="print_names",
                       help='print names',
                       action="store_true")
   args = parser.parse_args()
   
-  scry = parse_json(args.json_file_name)
+  if args.json_file_name is not None:
+    scry = parse_json(args.json_file_name)
+  
+  if args.scry_query is not None:
+    scry = get_cards(args.scry_query)
 
   if args.print_names:
     card_names = json_list_to_names(scry)
     print_names(card_names)
-
