@@ -26,7 +26,30 @@ options:
   --only-count       print only card count
 ```
 
+`SCRY_QUERY` accepts the [Scryfall syntax](https://scryfall.com/docs/syntax).
+The JSON files to be interpreted can be downloaded [here](https://scryfall.com/docs/api/bulk-data). Currently only card lists are supported.
+
 # Example output
+
+```
+> ./scry.py -q "set:ltr t:legendary t:artifact"
+Got 14 cards:
+
+Andúril, Flame of the West 
+Bilbo's Ring 
+Doors of Durin 
+Glamdring 
+Grond, the Gatebreaker 
+Horn of Gondor 
+Horn of the Mark 
+Mirror of Galadriel 
+Mithril Coat 
+Palantír of Orthanc 
+Phial of Galadriel 
+Sting, the Glinting Dagger 
+Stone of Erech 
+The One Ring 
+```
 
 ```
 > ./scry.py -q Aragorn --full
