@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
+import sys
 import json
 import argparse
 import urllib.request
+import time
 
 def parse_json(json_text:str):
   json_object = json.loads(json_text)
@@ -10,23 +12,41 @@ def parse_json(json_text:str):
   cards = []
   for card in json_object["data"]:
     cards.append(card)
+
+  try:
+    has_more = json_object["has_more"]
+    next_page = json_object["next_page"]
+  except KeyError:
+    has_more = False
+    next_page = ""
+
+  meta = (has_more, next_page)
   
-  return cards
+  return (cards, meta)
 
 def parse_json_file(json_file_name:str):
   with open(args.json_file_name) as json_file:
     json_text = json_file.read()
   
-  return parse_json(json_text)
+  (cards, meta) = parse_json(json_text)
+
+  return cards
 
 def query_scryfall(scry_query:str):
   sanitized_query = urllib.parse.quote(scry_query, safe='/', encoding=None, errors=None)
   scry_http_get = f"https://api.scryfall.com/cards/search?q={sanitized_query}"
   json_text = urllib.request.urlopen(scry_http_get).read()
 
-  #todo: add pagination support
+  (cards, meta) = parse_json(json_text)
 
-  return parse_json(json_text)
+  while meta[0]:
+    next_page = urllib.request.urlopen(meta[1]).read()
+    (new_cards, meta) = parse_json(next_page)
+    cards.extend(new_cards)
+    time.sleep(0.1)
+    print(f"got {len(cards)} cards")
+  
+  return cards
 
 def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
   for card in cards:
@@ -65,6 +85,9 @@ if __name__ == "__main__":
                       help='print oracle text',
                       action="store_true")
   args = parser.parse_args()
+
+  if not len(sys.argv) > 1:
+    parser.print_help()
 
   if (args.json_file_name is not None) and (args.scry_query is not None):
     raise RuntimeError("Invalid parameters")
