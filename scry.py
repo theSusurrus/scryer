@@ -9,7 +9,7 @@ import time
 def parse_json(json_text:str):
   json_object = json.loads(json_text)
 
-  if json_object is dict:
+  if type(json_object) is dict:
     # get card list from API response
     api_mode = True
     card_list = json_object["data"]
