@@ -28,7 +28,7 @@ options:
 
 # Example output
 
-```bash
+```
 > ./scry.py -q Aragorn --full
 Got 4 cards:
 
