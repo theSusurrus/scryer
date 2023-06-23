@@ -43,8 +43,7 @@ def query_scryfall(scry_query:str):
     next_page = urllib.request.urlopen(meta[1]).read()
     (new_cards, meta) = parse_json(next_page)
     cards.extend(new_cards)
-    time.sleep(0.1)
-    print(f"got {len(cards)} cards")
+    time.sleep(0.1) #rate limiting, as per Scryfall API rules
   
   return cards
 
@@ -81,8 +80,11 @@ if __name__ == "__main__":
   parser.add_argument('--oracle', dest="print_oracle",
                       help='print oracle text',
                       action="store_true")
-  parser.add_argument('--mana_cost', dest="print_mana_cost",
+  parser.add_argument('--mana-cost', dest="print_mana_cost",
                       help='print oracle text',
+                      action="store_true")
+  parser.add_argument('--no-count', dest="print_no_count",
+                      help='don\'t print card count',
                       action="store_true")
   args = parser.parse_args()
 
@@ -97,6 +99,9 @@ if __name__ == "__main__":
   
   if args.scry_query is not None:
     cards = query_scryfall(args.scry_query)
+
+  if not args.print_no_count
+    print(f"Got {len(cards)} cards:\n")
 
   print_cards(cards,
               name=(not args.print_no_names),
