@@ -100,7 +100,7 @@ if __name__ == "__main__":
   if args.scry_query is not None:
     cards = query_scryfall(args.scry_query)
 
-  if not args.print_no_count
+  if not args.print_no_count:
     print(f"Got {len(cards)} cards:\n")
 
   print_cards(cards,
