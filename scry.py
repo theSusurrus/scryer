@@ -9,16 +9,28 @@ import time
 def parse_json(json_text:str):
   json_object = json.loads(json_text)
 
+  if json_object is dict:
+    # get card list from API response
+    api_mode = True
+    card_list = json_object["data"]
+  else:
+    # get card list from Scryfall dump
+    card_list = json_object
+    api_mode = False
+
   cards = []
-  for card in json_object["data"]:
+  for card in card_list:
     cards.append(card)
 
-  try:
-    has_more = json_object["has_more"]
-    next_page = json_object["next_page"]
-  except KeyError:
-    has_more = False
-    next_page = ""
+  has_more = False
+  next_page = ""
+
+  if api_mode:
+    try:
+      has_more = json_object["has_more"]
+      next_page = json_object["next_page"]
+    except KeyError:
+      pass
 
   meta = (has_more, next_page)
   
