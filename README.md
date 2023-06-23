@@ -26,6 +26,32 @@ options:
   --only-count       print only card count
 ```
 
+# Example output
+
+```bash
+> ./scry.py -q Aragorn --full
+Got 4 cards:
+
+Aragorn and Arwen, Wed {4}{G}{W} id:GW 
+Vigilance
+Whenever Aragorn and Arwen, Wed enters the battlefield or attacks, put a +1/+1 counter on each other creature you control. You gain 1 life for each other creature you control.
+
+Aragorn, Company Leader {1}{G}{W} id:GW 
+Whenever the Ring tempts you, if you chose a creature other than Aragorn, Company Leader as your Ring-bearer, put your choice of a counter from among first strike, vigilance, deathtouch, and lifelink on Aragorn.
+Whenever you put one or more counters on Aragorn, put one of each of those kinds of counters on up to one other target creature.
+
+Aragorn, King of Gondor {1}{U}{R}{W} id:RUW 
+Vigilance, lifelink
+When Aragorn, King of Gondor enters the battlefield, you become the monarch.
+Whenever Aragorn attacks, up to one target creature can't block this turn. If you're the monarch, creatures can't block this turn.
+
+Aragorn, the Uniter {R}{G}{W}{U} id:GRUW 
+Whenever you cast a white spell, create a 1/1 white Human Soldier creature token.
+Whenever you cast a blue spell, scry 2.
+Whenever you cast a red spell, Aragorn, the Uniter deals 3 damage to target opponent.
+Whenever you cast a green spell, target creature gets +4/+4 until end of turn.
+```
+
 # Known issues
 
 - Querying for more than ~5000 cards hangs for some reason.
