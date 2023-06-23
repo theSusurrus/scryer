@@ -6,7 +6,7 @@ Program for
 
 # Help
 
-```bash
+```
 usage: scry.py [-h] [-j JSON_FILE_NAME] [-q SCRY_QUERY] [--no-names]
                [--colors] [--oracle] [--mana-cost] [--no-count] [--full]
                [--only-count]
