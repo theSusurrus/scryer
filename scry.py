@@ -66,7 +66,7 @@ def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
     print()
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser(description='Process JSON lists from scryfall.')
+  parser = argparse.ArgumentParser(description='Query Scryfall or Process JSON lists from scryfall.')
   parser.add_argument('-j', dest="json_file_name",
                       help='JSON file to be converted')
   parser.add_argument('-q', dest="scry_query",
@@ -86,10 +86,18 @@ if __name__ == "__main__":
   parser.add_argument('--no-count', dest="print_no_count",
                       help='don\'t print card count',
                       action="store_true")
+  parser.add_argument('--full', dest="print_full",
+                      help='print full card info',
+                      action="store_true")
+  parser.add_argument('--only-count', dest="print_only_count",
+                      help='print only card count',
+                      action="store_true")
+
   args = parser.parse_args()
 
   if not len(sys.argv) > 1:
     parser.print_help()
+    exit()
 
   if (args.json_file_name is not None) and (args.scry_query is not None):
     raise RuntimeError("Invalid parameters")
@@ -101,8 +109,16 @@ if __name__ == "__main__":
     cards = query_scryfall(args.scry_query)
 
   if not args.print_no_count:
-    print(f"Got {len(cards)} cards:\n")
+    print(f"Got {len(cards)} cards:")
 
+  if args.print_full:
+    args.print_oracle = True
+    args.print_colors = True
+    args.print_mana_cost = True
+  elif args.print_only_count:
+    exit()
+
+  print()
   print_cards(cards,
               name=(not args.print_no_names),
               color=args.print_colors,
