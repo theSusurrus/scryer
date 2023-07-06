@@ -8,22 +8,27 @@ Program for
 
 ```
 usage: scry.py [-h] [-j JSON_FILE_NAME] [-q SCRY_QUERY] [--no-names]
-               [--colors] [--oracle] [--mana-cost] [--no-count] [--full]
-               [--only-count]
+[--colors] [--oracle] [--eur] [--mana-cost] [--no-count] [--full]
+[--only-count] [--sum-price] [--download-art] [--download-path DOWNLOAD_PATH]
 
 Query Scryfall or Process JSON lists from scryfall.
 
-options:
-  -h, --help         show this help message and exit
-  -j JSON_FILE_NAME  JSON file to be converted
-  -q SCRY_QUERY      scryfall query
-  --no-names         print names
-  --colors           print colors
-  --oracle           print oracle text
-  --mana-cost        print oracle text
-  --no-count         don't print card count
-  --full             print full card info
-  --only-count       print only card count
+optional arguments:
+  -h, --help            show this help message and exit
+  -j JSON_FILE_NAME     JSON file to be converted
+  -q SCRY_QUERY         scryfall query
+  --no-names            print names
+  --colors              print colors
+  --oracle              print oracle text
+  --eur                 print price
+  --mana-cost           print oracle text
+  --no-count            don't print card count
+  --full                print full card info
+  --only-count          print only card count
+  --sum-price           print the price for all cards
+  --download-art        download all arts
+  --download-path DOWNLOAD_PATH
+                        path to download dir
 ```
 
 `SCRY_QUERY` accepts the [Scryfall syntax](https://scryfall.com/docs/syntax).
