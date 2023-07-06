@@ -59,8 +59,11 @@ def query_scryfall(scry_query:str):
   
   return cards
 
-def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
+def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False, eur=False):
+  header = "-" * 80
   for card in cards:
+    if oracle or eur:
+      print(header)
     if name:
       print(card["name"], end=' ')
     if mana_cost:
@@ -70,12 +73,26 @@ def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False):
         pass
     if color:
       print(f"id:{''.join(card['color_identity'])}", end=' ')
+    if eur:
+      price_eur = card["prices"]["eur"]
+      if price_eur is not None:
+        print(f"\n{float(price_eur)}EUR", end=' ')
+      else:
+        print("\n?EUR", end=' ')
     if oracle:
       try:
         print(f"\n{card['oracle_text']}")
       except KeyError:
         pass
     print()
+
+def sum_eur(cards):
+  sum = 0.0
+  for card in cards:
+    eur = card["prices"]["eur"]
+    if eur is not None:
+      sum += float(eur)
+  return sum
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Query Scryfall or Process JSON lists from scryfall.')
@@ -92,6 +109,9 @@ if __name__ == "__main__":
   parser.add_argument('--oracle', dest="print_oracle",
                       help='print oracle text',
                       action="store_true")
+  parser.add_argument('--eur', dest="print_eur",
+                      help='print price',
+                      action="store_true")
   parser.add_argument('--mana-cost', dest="print_mana_cost",
                       help='print oracle text',
                       action="store_true")
@@ -103,6 +123,9 @@ if __name__ == "__main__":
                       action="store_true")
   parser.add_argument('--only-count', dest="print_only_count",
                       help='print only card count',
+                      action="store_true")
+  parser.add_argument('--sum-price', dest="sum_eur",
+                      help='print the price for all cards',
                       action="store_true")
 
   args = parser.parse_args()
@@ -127,6 +150,8 @@ if __name__ == "__main__":
     args.print_oracle = True
     args.print_colors = True
     args.print_mana_cost = True
+    args.print_eur = True
+    args.sum_eur = True
   elif args.print_only_count:
     exit()
 
@@ -135,4 +160,8 @@ if __name__ == "__main__":
               name=(not args.print_no_names),
               color=args.print_colors,
               oracle=args.print_oracle,
-              mana_cost=args.print_mana_cost)
+              mana_cost=args.print_mana_cost,
+              eur = args.print_eur)
+
+  if args.sum_eur:
+    print(f"\nPrice sum: {sum_eur(cards):.2f}EUR")
