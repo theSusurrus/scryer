@@ -84,7 +84,8 @@ def print_cards(cards, name=True, color=False, oracle=False, mana_cost=False, eu
         print(f"\n{card['oracle_text']}")
       except KeyError:
         pass
-    print()
+    if name or color or oracle or mana_cost or eur:
+      print()
 
 def sum_eur(cards):
   sum = 0.0
@@ -144,7 +145,7 @@ if __name__ == "__main__":
     cards = query_scryfall(args.scry_query)
 
   if not args.print_no_count:
-    print(f"Got {len(cards)} cards:")
+    print(f"Got {len(cards)} cards:\n")
 
   if args.print_full:
     args.print_oracle = True
@@ -155,7 +156,6 @@ if __name__ == "__main__":
   elif args.print_only_count:
     exit()
 
-  print()
   print_cards(cards,
               name=(not args.print_no_names),
               color=args.print_colors,
@@ -164,4 +164,4 @@ if __name__ == "__main__":
               eur = args.print_eur)
 
   if args.sum_eur:
-    print(f"\nPrice sum: {sum_eur(cards):.2f}EUR")
+    print(f"Price sum: {sum_eur(cards):.2f}EUR")
