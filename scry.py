@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
+import os
 import sys
 import json
 import argparse
 import urllib.request
 import time
+import requests
 
 def parse_json(json_text:str):
   json_object = json.loads(json_text)
@@ -95,6 +97,16 @@ def sum_eur(cards):
       sum += float(eur)
   return sum
 
+def downlad_art(cards, download_path):
+  if not os.path.exists(download_path):
+    os.makedirs(download_path)
+  for card in cards:
+    image_url = card["image_uris"]["large"]
+    image_path = f"{download_path}/{card['name']}_{card['collector_number']}.jpg"
+    img_data = requests.get(image_url).content
+    with open(image_path, 'wb') as handler:
+        handler.write(img_data)
+
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Query Scryfall or Process JSON lists from scryfall.')
   parser.add_argument('-j', dest="json_file_name",
@@ -128,6 +140,12 @@ if __name__ == "__main__":
   parser.add_argument('--sum-price', dest="sum_eur",
                       help='print the price for all cards',
                       action="store_true")
+  parser.add_argument('--download-art', dest="download_art",
+                      help='download all arts',
+                      action="store_true")
+  parser.add_argument('--download-path', dest="download_path",
+                      help='path to download dir',
+                      default="download")
 
   args = parser.parse_args()
 
@@ -165,3 +183,6 @@ if __name__ == "__main__":
 
   if args.sum_eur:
     print(f"Price sum: {sum_eur(cards):.2f}EUR")
+
+  if args.download_art:
+    downlad_art(cards, args.download_path)
