@@ -103,6 +103,9 @@ def downlad_art(cards, download_path):
   for card in cards:
     image_url = card["image_uris"]["large"]
     image_path = f"{download_path}/{card['name']}_{card['collector_number']}.jpg"
+    if os.path.exists(image_path):
+      continue
+
     img_data = requests.get(image_url).content
     with open(image_path, 'wb') as handler:
         handler.write(img_data)
