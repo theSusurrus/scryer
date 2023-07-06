@@ -7,6 +7,7 @@ import argparse
 import urllib.request
 import time
 import requests
+import re
 
 def parse_json(json_text:str):
   json_object = json.loads(json_text)
@@ -102,7 +103,8 @@ def downlad_art(cards, download_path):
     os.makedirs(download_path)
   for card in cards:
     image_url = card["image_uris"]["large"]
-    image_path = f"{download_path}/{card['name']}_{card['collector_number']}.jpg"
+    sanitized_card_name = re.sub("[\s/,'0-9]+", "_", card["name"])
+    image_path = f"{download_path}/{sanitized_card_name}_{card['collector_number']}.jpg"
     if os.path.exists(image_path):
       continue
 
